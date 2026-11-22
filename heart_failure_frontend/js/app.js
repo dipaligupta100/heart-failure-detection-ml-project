@@ -1,4 +1,4 @@
-const API_BASE_URL = "https://heart-failure-detection-ml-project.onrender.com/predict"; // Change this if your backend runs elsewhere.
+const API_BASE_URL = "https://heart-failure-detection-ml-project.onrender.com"; // Change this if your backend runs elsewhere.
 const $ = (id) => document.getElementById(id);
 const USERS_KEY = "cardiocare_demo_users";
 const SESSION_KEY = "cardiocare_demo_session";
