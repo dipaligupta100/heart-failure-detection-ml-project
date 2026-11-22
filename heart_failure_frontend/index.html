@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0f766e">
+  <title>CardioCare | Heart Failure Risk Assessment</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="#" aria-label="CardioCare home">
+        <span class="brand-mark">♥</span><span>Cardio<span class="brand-light">Care</span></span>
+      </a>
+      <div class="side-label">WORKSPACE</div>
+      <button class="nav-item active" id="nav-dashboard"><span>▦</span> Dashboard</button>
+      <button class="nav-item" id="nav-assessment"><span>＋</span> New assessment</button>
+      <div class="sidebar-bottom">
+        <div class="privacy-card"><span class="privacy-icon">⌑</span><strong>Privacy first</strong><p>Only submit data you are authorized to use. This demo does not store patient assessments.</p></div>
+        <button class="nav-item logout" id="logoutBtn"><span>↪</span> Sign out</button>
+      </div>
+    </aside>
+
+    <main class="main-area">
+      <header class="topbar">
+        <button class="mobile-menu" id="menuBtn" aria-label="Toggle navigation">☰</button>
+        <div><div class="eyebrow">HEALTH ANALYTICS</div><div class="top-title">Heart health overview</div></div>
+        <div class="top-user"><div class="avatar" id="userAvatar">U</div><div><strong id="userName">User</strong><small>Workspace</small></div></div>
+      </header>
+
+      <section class="page-content" id="dashboardPage">
+        <div class="welcome-row">
+          <div><div class="eyebrow">YOUR WORKSPACE</div><h1>Welcome back, <span id="welcomeName">there</span>.</h1><p class="muted">Run an assessment using your trained machine-learning model.</p></div>
+          <button class="primary-btn" id="startAssessment">＋ New assessment</button>
+        </div>
+
+        <div class="notice"><span class="notice-icon">i</span><div><strong>Research / educational tool only</strong><p>This application is not a medical device and cannot diagnose heart failure or guide treatment. A qualified clinician must interpret clinical information.</p></div></div>
+
+        <div class="stats-grid">
+          <article class="stat-card"><div class="stat-icon teal">＋</div><div class="stat-label">Assessment workflow</div><div class="stat-value">Ready</div><div class="stat-foot">Submit patient features below</div></article>
+          <article class="stat-card"><div class="stat-icon blue">⌁</div><div class="stat-label">Model connection</div><div class="stat-value" id="apiStatus">Not checked</div><div class="stat-foot" id="apiStatusFoot">API: http://127.0.0.1:8000</div></article>
+          <article class="stat-card"><div class="stat-icon violet">◇</div><div class="stat-label">Latest result</div><div class="stat-value" id="latestResult">—</div><div class="stat-foot">No assessment in this session</div></article>
+        </div>
+
+        <section class="panel assessment-panel" id="assessmentPanel">
+          <div class="panel-heading"><div><div class="eyebrow">MODEL INPUT</div><h2>New heart failure assessment</h2><p class="muted">Enter all 12 features expected by the standard UCI Heart Failure Clinical Records dataset.</p></div><span class="model-chip">ML PREDICTION</span></div>
+          <form id="predictionForm" novalidate>
+            <div class="form-section-title">Patient information</div>
+            <div class="form-grid">
+              <label>Age <span class="unit">years</span><input name="age" type="number" min="1" max="120" step="1" placeholder="e.g. 65" required></label>
+              <label>Sex<select name="sex" required><option value="">Select</option><option value="1">Male (1)</option><option value="0">Female (0)</option></select></label>
+              <label>Anaemia<select name="anaemia" required><option value="">Select</option><option value="1">Yes (1)</option><option value="0">No (0)</option></select></label>
+              <label>Diabetes<select name="diabetes" required><option value="">Select</option><option value="1">Yes (1)</option><option value="0">No (0)</option></select></label>
+              <label>High blood pressure<select name="high_blood_pressure" required><option value="">Select</option><option value="1">Yes (1)</option><option value="0">No (0)</option></select></label>
+              <label>Smoking<select name="smoking" required><option value="">Select</option><option value="1">Yes (1)</option><option value="0">No (0)</option></select></label>
+            </div>
+            <div class="form-section-title section-spaced">Clinical measurements</div>
+            <div class="form-grid">
+              <label>Creatinine phosphokinase <span class="unit">mcg/L</span><input name="creatinine_phosphokinase" type="number" min="0" step="any" placeholder="e.g. 250" required></label>
+              <label>Ejection fraction <span class="unit">%</span><input name="ejection_fraction" type="number" min="1" max="100" step="any" placeholder="e.g. ครับ35" required></label>
+              <label>Platelets <span class="unit">kiloplatelets/mL</span><input name="platelets" type="number" min="0" step="any" placeholder="e.g. 250000" required></label>
+              <label>Serum creatinine <span class="unit">mg/dL</span><input name="serum_creatinine" type="number" min="0" step="any" placeholder="e.g. 1.1" required></label>
+              <label>Serum sodium <span class="unit">mEq/L</span><input name="serum_sodium" type="number" min="0" step="any" placeholder="e.g. 137" required></label>
+              <label>Follow-up period <span class="unit">days</span><input name="time" type="number" min="1" step="1" placeholder="e.g. 120" required></label>
+            </div>
+            <div class="form-actions"><button type="reset" class="secondary-btn">Clear form</button><button type="submit" class="primary-btn" id="predictBtn">Run prediction <span>→</span></button></div>
+            <p class="form-error" id="formError" role="alert"></p>
+          </form>
+          <div class="result-box hidden" id="resultBox" aria-live="polite">
+            <div class="result-symbol" id="resultSymbol">✓</div><div class="result-copy"><div class="eyebrow">MODEL RESPONSE</div><h3 id="resultTitle">Prediction received</h3><p id="resultText"></p><small id="resultRaw"></small></div>
+          </div>
+        </section>
+        <footer>CardioCare · Academic project interface · Not for clinical use</footer>
+      </section>
+    </main>
+  </div>
+
+  <section class="auth-screen" id="authScreen">
+    <div class="auth-art">
+      <div class="auth-brand"><span class="brand-mark">♥</span> CardioCare</div>
+      <div class="art-content"><div class="eyebrow light">HEART HEALTH ANALYTICS</div><h1>Make clinical data<br><em>easier to explore.</em></h1><p>A clean interface for your machine-learning heart failure prediction project.</p><div class="art-orbit"><div class="orbit-heart">♥</div><span class="orbit-dot dot-one"></span><span class="orbit-dot dot-two"></span><span class="orbit-dot dot-three"></span></div></div>
+      <div class="art-caption">A student machine-learning project interface</div>
+    </div>
+    <div class="auth-side">
+      <div class="auth-mobile-brand"><span class="brand-mark">♥</span> CardioCare</div>
+      <div class="auth-card">
+        <div class="eyebrow">WELCOME</div><h2 id="authTitle">Sign in to your workspace</h2><p class="muted" id="authSubtitle">Enter your details to continue.</p>
+        <form id="authForm" novalidate>
+          <div id="nameField" class="auth-field hidden"><label for="fullName">Full name</label><input id="fullName" type="text" autocomplete="name" placeholder="Your name"></div>
+          <div class="auth-field"><label for="email">Email address</label><input id="email" type="email" autocomplete="email" placeholder="name@example.com" required></div>
+          <div class="auth-field"><label for="password">Password</label><div class="password-wrap"><input id="password" type="password" autocomplete="current-password" placeholder="At least 8 characters" required><button type="button" id="togglePassword" aria-label="Show password">Show</button></div></div>
+          <div class="auth-error" id="authError" role="alert"></div>
+          <button class="primary-btn full-btn" id="authSubmit" type="submit">Sign in <span>→</span></button>
+        </form>
+        <p class="switch-auth"><span id="switchText">New here?</span> <button id="switchAuth" type="button">Create an account</button></p>
+        <p class="demo-note">Demo authentication only. Accounts are stored in this browser and are not secure. Do not use real passwords.</p>
+      </div>
+    </div>
+  </section>
+  <script src="js/app.js"></script>
+</body>
+</html>
